@@ -1,10 +1,12 @@
 package main
 
 import (
+	"cmp"
 	"encoding/json"
 	"flag"
 	"log"
 	"os"
+	"slices"
 )
 
 const path = "items.json"
@@ -20,7 +22,20 @@ type SaleItem struct {
 // matchSales adds the sales procentage of the item
 // and sorts the array accordingly.
 func matchSales(budget float64, items []SaleItem) []SaleItem {
-	panic("NOT IMPLEMENTED")
+	var result []SaleItem
+
+	for _, item := range items {
+		if item.ReducedPrice <= budget {
+			item.SalePercentage = (item.OriginalPrice - item.ReducedPrice) / item.OriginalPrice * 100
+			result = append(result, item)
+		}
+	}
+
+	slices.SortFunc(result, func(a, b SaleItem) int {
+		return cmp.Compare(b.SalePercentage, a.SalePercentage)
+	})
+
+	return result
 }
 
 func main() {
