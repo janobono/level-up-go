@@ -13,3 +13,4 @@
 - [Balanced brackets](./07-balanced-brackets/balanced-brackets.go)
 - [Spreading gossip](./08-spreading-gossip/spreading-gossip.go)
 - [Make a playlist](./09-make-a-playlist/make-a-playlist.go)
+- [Calculator edge cases](./10-calculator-edge-cases/calculator-edge-cases.go)
