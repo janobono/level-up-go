@@ -1,10 +1,12 @@
 package main
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"slices"
 	"text/tabwriter"
 )
 
@@ -19,7 +21,20 @@ type Song struct {
 
 // makePlaylist makes the merged sorted list of songs
 func makePlaylist(albums [][]Song) []Song {
-	panic("NOT IMPLEMENTED")
+	var result []Song
+	if len(albums) == 0 {
+		return result
+	}
+
+	for _, album := range albums {
+		for _, song := range album {
+			result = append(result, song)
+		}
+	}
+
+	slices.SortFunc(result, func(a, b Song) int { return cmp.Compare(b.PlayCount, a.PlayCount) })
+
+	return result
 }
 
 func main() {
