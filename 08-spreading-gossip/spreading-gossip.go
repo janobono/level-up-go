@@ -6,7 +6,6 @@ import (
 	"log"
 	"math/rand"
 	"os"
-	"time"
 )
 
 const path = "friends.json"
@@ -35,21 +34,29 @@ func (f *Friends) getFriend(id string) Friend {
 
 // getRandomFriend returns an random friend.
 func (f *Friends) getRandomFriend() Friend {
-	rand.Seed(time.Now().Unix())
 	id := (rand.Intn(len(f.fmap)-1) + 1) * 100
 	return f.getFriend(fmt.Sprint(id))
 }
 
 // spreadGossip ensures that all the friends in the map have heard the news
-func spreadGossip(root Friend, friends Friends) {
-	panic("NOT IMPLEMENTED")
+func spreadGossip(root Friend, friends Friends, informed map[string]bool) {
+	for _, id := range root.Friends {
+		if !informed[id] {
+			friend := friends.getFriend(id)
+			friend.hearGossip()
+			informed[id] = true
+			spreadGossip(friend, friends, informed)
+		}
+	}
 }
 
 func main() {
 	friends := importData()
 	root := friends.getRandomFriend()
 	root.hearGossip()
-	spreadGossip(root, friends)
+	informed := make(map[string]bool)
+	informed[root.ID] = true
+	spreadGossip(root, friends, informed)
 }
 
 // importData reads the input data from file and
