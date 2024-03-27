@@ -10,3 +10,4 @@
 - [Calculate change](./04-calculate-change/calculate-change.go)
 - [The big sale](./05-the-big-sale/the-big-sale.go)
 - [Biggest market](./06-biggest-market/biggest-market.go)
+- [Balanced brackets](./07-balanced-brackets/balanced-brackets.go)
