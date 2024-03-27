@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"sync"
 )
 
 var messages = []string{
@@ -15,7 +17,24 @@ var messages = []string{
 
 // repeat concurrently prints out the given message n times
 func repeat(n int, message string) {
-	panic("NOT IMPLEMENTED")
+	var wg sync.WaitGroup
+
+	for i := 0; i < n; i++ {
+		wg.Add(1)
+
+		routine := func(id int, data string) {
+			defer wg.Done()
+			printMessage(id, data)
+		}
+
+		go routine(i, message)
+	}
+
+	wg.Wait()
+}
+
+func printMessage(id int, message string) {
+	fmt.Printf("[%d]:%s\n", id, message)
 }
 
 func main() {
