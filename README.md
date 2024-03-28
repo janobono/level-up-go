@@ -20,3 +20,4 @@
 - [Stop copying me](./11-stop-copying-me/stop-copying-me.go)
 - [Walk the dog](./12-walk-the-dog/walk-the-dog.go)
 - [The conference lunch](./13-the-conference-lunch/the-conference-lunch.go)
+- [The silent auction](./14-the-silent-auction/the-silent-auction.go)
