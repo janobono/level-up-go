@@ -18,3 +18,4 @@
 ## concurrency challenges
 
 - [Stop copying me](./11-stop-copying-me/stop-copying-me.go)
+- [Walk the dog](./12-walk-the-dog/walk-the-dog.go)
