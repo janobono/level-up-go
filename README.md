@@ -21,3 +21,5 @@
 - [Walk the dog](./12-walk-the-dog/walk-the-dog.go)
 - [The conference lunch](./13-the-conference-lunch/the-conference-lunch.go)
 - [The silent auction](./14-the-silent-auction/the-silent-auction.go)
+- [The silent auction](./14-the-silent-auction/the-silent-auction.go)
+- [Coffee shop](./15-coffee-shop/coffee-shop.go)
