@@ -34,24 +34,51 @@ type auctioneer struct {
 }
 
 // runAuction and manages the auction for all the items to be sold
-// Change the signature of this function as required
-func (a *auctioneer) runAuction() {
+func (a *auctioneer) runAuction(bids <-chan bid, open chan<- struct{}) {
 	for _, item := range items {
 		log.Printf("Opening bids for %s!\n", item)
-		panic("NOT IMPLEMENTED YET")
+		a.openBids(open)
+		a.processWinner(item, bids)
 	}
 }
 
-// bidder is a type that holds the bidder id and wallet
+// openBids signals to all bidders that the auction for the item is open.
+func (a *auctioneer) openBids(open chan<- struct{}) {
+	for i := 0; i < bidderCount; i++ {
+		open <- struct{}{}
+	}
+}
+
+// processWinner reads all the bids and finds the winner of the auction
+func (a *auctioneer) processWinner(item string, bids <-chan bid) {
+	var winner bid
+	for i := 0; i < bidderCount; i++ {
+		cb := <-bids
+		if winner.amount < cb.amount {
+			winner = cb
+		}
+	}
+	log.Printf("%s is sold to %s for %d!\n", item,
+		winner.bidderID, winner.amount)
+	a.bidders[winner.bidderID].payBid(winner.amount)
+}
+
+// bidder is a type that pays the bidder to their wallet
 type bidder struct {
 	id     string
 	wallet int
 }
 
 // placeBid generates a random amount and places it on the bids channels
-// Change the signature of this function as required
-func (b *bidder) placeBid() {
-	panic("NOT IMPLEMENTED YET")
+func (b *bidder) placeBid(out chan<- bid, open <-chan struct{}) {
+	for i := 0; i < len(items); i++ {
+		<-open
+		currentBid := bid{bidderID: b.id}
+		if b.wallet > 0 {
+			currentBid.amount = getRandomAmount(b.wallet)
+		}
+		out <- currentBid
+	}
 }
 
 // payBid subtracts the bid amount from the wallet of the auction winner
@@ -63,6 +90,8 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	log.Println("Welcome to the LinkedIn Learning auction.")
 	bidders := make(map[string]*bidder, bidderCount)
+	bids := make(chan bid, bidderCount)
+	openBids := make(chan struct{})
 	for i := 0; i < bidderCount; i++ {
 		id := fmt.Sprint("Bidder ", i)
 		b := bidder{
@@ -70,12 +99,12 @@ func main() {
 			wallet: walletAmount,
 		}
 		bidders[id] = &b
-		go b.placeBid()
+		go b.placeBid(bids, openBids)
 	}
 	a := auctioneer{
 		bidders: bidders,
 	}
-	a.runAuction()
+	a.runAuction(bids, openBids)
 	log.Println("The LinkedIn Learning auction has finished!")
 }
 
